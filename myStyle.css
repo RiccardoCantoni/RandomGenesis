@@ -1,0 +1,102 @@
+
+h1.logo {
+	font-size: 80px;
+	font-weight: normal;
+	font-family: "Days One", sans-serif;
+	margin-bottom: 20px;
+	color: #2f2442;
+}
+
+h1.section {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 32px;
+	color: #2f2442;
+	margin-top: 0px
+}
+p.sep {
+	height:4px;
+	width: 100%;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 0px;
+	margin-right: 0px;
+	background-color: #2f2442;
+}
+
+p.sep-white{
+	padding-bottom: 32px;
+}
+
+p.sep-white-16{
+	padding-bottom: 32px;
+}
+
+p.text {
+	font-family: "Arial Bold";
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 16px;
+	color: #2f2442;
+}
+
+a.text {
+	font-family: "Arial Bold";
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 16px;
+	color: #2f2442;
+}
+
+p.formula{
+	font-family: "Arial Bold", Gadget, sans-serif;
+	font-size: 16px;
+	color: #2f2442;
+}
+
+
+p.title {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 24px;
+	text-align: left;
+	color: #2f2442;
+	padding: 4px;
+}
+
+
+
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+li a.menu {
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size: 20px;
+	display: block;
+	text-align: right;
+	color: #2f2442;
+	padding: 4px;
+	text-decoration: none;
+}
+li a:hover {
+    background-color: #2f2442;
+    color: #e2e2e2;
+    text-decoration: none;
+}
+
+
+img.menu {
+	max-width: 188px; 
+	max-height: 280px;
+	overflow: hidden;
+}
+
+img.large {
+	width:100%;
+}
+
+img.centered-small{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 200px;
+}

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<meta property="og:image" content="http://random-genesis.getforge.io/imgs/layout_generation7.png" />
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="#about">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Islamic architecture</h1>
+					<p class="sep"></p>
+					<p class="text">
+					The idea is to hierarchically construct buildings by instantiating pre-modelled, 3D pieces.<br>
+					A Markov-chain-like grammar can be used to procedurally design a tree of objects, where the leaves are simple solid shapes.<br>
+					Keeping the models as bare-bone as possible will allow the algorithm to scale in complexity, while simultaneously drastically reducing the costs of the modelling process.<br>
+					<br>
+					I have chosen to look at islamic architecture for inspiration. I guess it looks more organic and less "planned" than other kinds of monumental art, so that even a randomised group of buildings will look alright.
+					<br>
+					<br>
+					Not a game, not a complicated algorithm, just a toy.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class ="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="title">
+						"Foundations" (04/03/2018)
+					</p>
+					<a class="text" href="archgen1.html">>Previous update</a></li>
+					<p class="text">
+					<br>
+					For now, the complexes I am going for are going to be made of different types of building: <br>
+					<br>
+					- courtyards surrounded by arches and columns<br>
+					- non-descriptive, flat-roofed buildings that act as fillers and connections<br>
+					- square, higher buildings surmounted by domes of various shapes and sizes<br>
+					- minarets<br>
+					- "junctions", gates between two buildings.<br>
+					<br>
+					To procedurally design the general layout of the complex, i am using an algorithm that works similarly to a graph search.<br> 
+					Graph search algorithms mostly follow the same general pattern, while the specific implementation of the primitives and structures involved is what differentiates between them.<br>
+					The generic graph search uses two data structures that contain sets of nodes: the "visited" set, containing al the nodes already visited by the search, and the "fringe", or "frontier", that holds all those nodes that are known but are yet to be visited.<br>
+					<br>
+					The generic algorithm goes something like this:<br>
+					1. Visited is initialised as empty, Fringe is initialised with the initial node<br>
+					2. while the fringe is not empty, and the search is not finished, repeat<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;	3. select a node N from Fringe<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;	4. remove N from Fringe<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;	5. expand N finding its successors<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;	6. add the successors to Fringe<br>
+					&nbsp;&nbsp;&nbsp;&nbsp;	7. add N to Visited<br>
+					<br>
+					The algorithm I'm using to distribute buildings around works similarly. However there is no graph involved. Instead of nodes in a graph, my "Fringe" contains "edges": walls of buildings to which an other building can be attached.<br>
+					Before the actual loop, a total T of buildings is assigned at random, as well as the number of minarets. The algorithm then places down the foundations of a new building at every iteration, until the total is reached, or no usable edges remain.<br>
+					The output of the algorithm is usually in the form of a Directed Acyclic Graph (DAG), representing the nodes encountered/visited/generated.<br>
+					<br>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								1. A first rectangle is generated. Rectangles are constrained by minimum/maximum side length, and a minimum/maximum ratio between minor and major side. Since they are all usable, its 4 edges are added to the "Edges" set.
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation1.png" >
+						</div>
+					</div>
+					<br>
+					<p class="text">
+						Then the main loop. <br>
+						It iterates until the Fringe set is empty, or until enough beuildings have ben placed.<br>
+					</p>
+					<br>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								<br>
+								2. An edge is picked at random from the Edges set. A point is randomly selected along it. A junction is placed there.<br>
+								The edge is removed from the Edges set.<br>
+								The newly generated junction will be used as a starting point for the generation of a new building. <br>
+								<br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation2.png" >
+						</div>
+					</div>
+					<p class="text">
+						The type of building is selected using a Roulette Selection, where the probability of generating a new rectangle decreases at every iteration.<br>
+						As a result, while the generation progresses, at first it will be likely to generate rectangles, and then squares.<br>
+						<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								3. Avaliable space is measured from the junction: line of sight from the junction to corners, and line of sight between corners.
+								<br> Given that there will be no unconnected parts, this is suficient to ensure that a consistent building is generated without overlapping any preexisting one.<br>
+								<br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation3.png" >
+						</div>
+					</div>
+					<p class="text">
+						If line of sight is broken, this step is attempted again (up to 50 times) with smaller sizes. If no attempts succeed it means that the edge ended up too close to other buildings, and is removed from the set.<br>
+						<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								<br>
+								<br>
+								4. The new building is placed down, and its edges are added to the pool, excluding the edge use to generate it.
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation4.png" >
+						</div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								5. As the loop (steps 2 to 4) keps iterating, more rectangular and square buildings are placed down without overlaps.<br>
+								The algorithm stops when enough buildings have been layed out. It would also stop if no avaliable edges remained, but that is mathematically impossible and will never happen.<br> 
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation5.png" >
+						</div>
+					</div>
+					<p class="text">
+						This can be easily proven by induction. However, such demonstration is not pertinent to this work.<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								<br>
+								6. As a last step, a certain number of smaller squares (that will later become minarets) are added to avaliable edges,<br>
+								completing the layout of the complex.<br> 
+								Also, the corners of buildings with sufficient space around them are stored in an additional structure.<br>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/layout_generation6.png" >
+						</div>
+					</div>
+					<p class="sep-white"></p>
+					<p class="text">
+						The output given by the algorithm is the description of the layout generated, in the form of:<br>
+						- A set of "building foundations" (defined by center, corners and type),<br>
+						- A set of junctions between buildings (defined by position and adjacent buildings),<br>
+						- A set of free corners.
+						In the future, each one of these will launch its own algorithm to generate the relative 3D structure.<br>
+						<br>
+						Returning to the parallel with graph search algorithms, the connections between buildings do in fact describe a DAG (more specifically, a tree).
+					</p>
+					<img class="large" src="../imgs/layout_generation7.png" >
+					<p class="sep"></p>
+					<!-- project entry -->
+					<!--<a class="text" href="worldgen2.html">>Next update</a></li>-->
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>

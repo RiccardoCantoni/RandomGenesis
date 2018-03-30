@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="bower_components/jquery.gifplayer/dist/gifplayer.css">
+		<script type="text/javascript" src="bower_components/jquery.gifplayer/dist/jquery.gifplayer.js"></script>
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="#about">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Scientific worldbuilding</h1>
+					<p class="sep"></p>
+					<p class="text">
+					Constructing fictional places has always been one of the main goals in the general field of procedural generation.<br>
+					However, in most cases, even the generation of entire worlds has just been a necessary step in the creation of some other product. The generation tends therefore to focus on a few aspects that are core to the final product, while many variables are left aside.<br>
+					<br>
+					The idea is to try and create large territories, where many different variables are scientifcally taken into account: geology, geography, climate, ecology... <br>
+					Possibly, through the application of some "Guns, Germs and Steel-like" mechanics it will be possible to simulate large scale interactions between humans and the environment, and among humans on a large scale.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="title">
+						"More noise" (28/02/2018)
+					</p>
+					<a class="text" href="worldgen1.html">>Previous Update</a></li>
+					<p class="text"><br>
+					The map generation algorithm was refined iteratively, trying to obtain meaningful maps, while simultaneously trying to keep the generation time under control. <br> 
+					Both white noise and perlin noise layers are generated in linear time. On the other hand, the voronoi layer is quite time consuming, since it requires K steps to generate the seed, and KN steps to assign every point to the correct partition (it involves calculating a minimum distance between the point and K centroids). It could be optimised, but the asymptotic complexity cannot be decreased.<br>
+					I am therefore keeping the number of voronoi layers limited to 1, and limiting the size K of the seed. Such layer is used as a starting point and influences the shape of landmasses.<br>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								Too low K values (K=60) produce maps with chunky landmasses and straight coastlines. The results are too geometric and simple, lacking both variation and resolution. (the map is 384x256)
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/60K.png" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								Increasing K sixfold (K=360) results in sufficiently irregular lines and organic-looking landmasses. However, the map generation is exactly 6 times as long as before. Larger K values make the output converge towards pure perlin noise, since partitions become smaller and more regular in shape, like plain pixels.
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/360K.png" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								180 partitions seem to be enough. <br>
+								There is no relevant loss of resolution/variety, and the generation is faster (half of the time required with K=360).
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/180K.png" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<p class="text">
+						This is the current implementation of the algorithm, in pseudo code. Stretching and smoothing fuctions are explained in the previous update.<br>
+						Every layer has a weight value W, used in the weighted average that normalizes the final result. The normalisation is actually performed every time a new layer is added
+
+						When "resolution" is specified it means that rather than giving a different value to each point, the layer assigns the same value to "squares" of NxN points.<br>
+						<br>
+						1. create empty heightmap of zeroes<br>
+						2. add a voronoi noise layer: 180 partitions, perlin sampling scale = 1.3, W = 16<br>
+						3. add a perlin noise layer: sampling scale = 1.1, W=4<br>
+						4. stretch the map by a factor of 1.5<br>
+						5. smooth: radius=3, 6 passes<br>
+						6. add a perlin noise layer: scale=1.1, resolution=4, W=4<br>
+						7. add a white noise layer: resolution=8, W=2<br>
+						8. stretch the map by a factor of 1.2<br>
+						9. smooth: radius=2, 4 passes<br>
+						10. add a white noise layer: resolution=2, W=1<br>
+						11. add a white noise layer: resolution=1, W=1<br>
+						12. selectively add a white noise layer with res=2, W=2, only to heights in [0.4,0.6]<br>
+						13. smooth: radius=2, 1 pass<br>
+						14. stretch by a factor of 1.2<br>
+						15. selectively smooth with radius=2, 2 passes, only in [0.48,0.52]<br>
+						16. smooth: radius 1, 1 pass.<br>
+						<br>
+						In total 6 layers are generated and added.<br>
+						<br>
+						The first two layers, voronoi + perlin, have together a weight of 20 on a total of 30. Their contribution is 2/3 of the final value. A strong smoothing (step n.5) is therefore necessary to make this heavy "base" less rough, before "thinner" layers are added.<br>
+						Towards the end of the process, steps 12 and 15 adjust the noisiness of coastlines, only changing heights around sea level.<br>
+						<br>
+						Below, one final result and a GIF of how the algorithm gets there. This is not finished, but it's acceptable as a base to start from. I might further change/improve/refine the algorithm later.
+					</p>
+					<img class="large" src="../imgs/180K.png" >
+					<p class="sep-white"></p>
+					<img class="large" src="../gifs/mapgen2.gif" >
+
+
+					<p class="sep"></p>
+					<!-- project entry -->
+					<a class="text" href="worldgen3.html">>Next update</a></li>
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="#about">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Islamic architecture</h1>
+					<p class="sep"></p>
+					<p class="text">
+					The idea is to hierarchically construct buildings by instantiating pre-modelled, 3D pieces.<br>
+					A Markov-chain-like grammar can be used to procedurally design a tree of objects, where the leaves are simple solid shapes.<br>
+					Keeping the models as bare-bone as possible will allow the algorithm to scale in complexity, while simultaneously drastically reducing the costs of the modelling process.<br>
+					<br>
+					I have chosen to look at islamic architecture for inspiration. I guess it looks more organic and less "planned" than other kinds of monumental art, so that even a randomised group of buildings will look alright.
+					<br>
+					<br>
+					Not a game, not a complicated algorithm, just a toy.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class ="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="title">
+						"Bottom-up" (16/02/2018)
+					</p>
+					<p class="text">
+					As a first step i'm experimenting with Blender and laying down the foundations for the entire system. Basic shapes and blocks, basic primitives and modules.<br>
+					I have never done any 3D modelling and i dont really have much experience with Unity, either. I hope i'll learn something along the way.<br>
+					Rather than starting from the layout of the buildings, i'm starting with a basic randomisation system for the smallest elements: columns and arches. These pieces will later be part of more complex structures.<br>
+					First of all, i modelled a few bases, shafts and capitals in Blender (ouch). Then i chucked them into a basic system that picks one of each at random and makes a column out of them. <br>
+					Simple enough. <br></p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/screenshot_columns.png" >
+					<p class="sep-white-16"></p>
+					<p class="text">
+					Then, onto something slightly (barely) more interesting. Two columns plus a ...top bit thingy? make an arch. Then you take many arches and stick them all in a line.<br> 
+					It makes sense.<br></p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/screenshot_arches.png">
+					<p class="sep-white-16"></p>
+					<p class="text">
+					Exporting stuff from Blender into Unity is a nightmare (if you're as new as i am to all this), the orientation ends up completely wrong 200% of the times, and the scale goes weird aswell. I spent most of the day rotating things at random hoping they would come out right after the import.
+					<br> 
+					Needless to say they didn't. <br>
+					</p>
+					<p class="sep"></p>
+					<!-- project entry -->
+					<a class="text" href="archgen2.html">>Next update</a></li>
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>

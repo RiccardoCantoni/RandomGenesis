@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">\\
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="#about">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Space Invaders AI</h1>
+					<p class="sep"></p>
+					<p class="text">
+					A little project i made for university. I'm only posting an explaination of the final product.<br>
+					<br>
+					The AI behind the automated player an "Expert System". A set of rules defined by a human "expert" who supposedly knows how to solve a problem. In this case the problem is "winning a game of Space Invaders".<br>
+					<br>
+					The agent analyses 16 parameters from the game, transforms them into fuzzy values that define characteristics of the current situation, and uses them in a two-level hierarchy of fuzzy controllers to produce an output. This in turn moves the character.<br>
+					<br>
+					Surprisingly enough, it worked.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="text">
+						First of all, it was necessary to implement a version of Space Invaders. I choose to do this in Unity (C#). Rather than trying to clone the original game, different mechanics were changed and adapted to suit the needs of this work. <br>
+						<br>
+						In the original bullets shot by the player move very fast: as a consequence there is little to no aiming involved, as the task of killing a specific enemy translates into simply aligning to it.<br>
+						Aligning to a moving target is trivial for an artificial player, so i made "friendly" bullets a lot slower. The game still needs to be playable by humans so that I can compare performances, so at the same time i made enemies slower, by drastically decreasing their maximum speed.<br>
+						Also there are more "bonus ships", as a way to reward the ability to recognise opportunities and exploit them.<br>
+						Given the inherent staticity of fuzzy systems, the game only has one level of difficulty. A game simply ends either with a victory or a loss.<br>
+						<br>
+						Now, onto the AI. Fuzzy controllers work by receiving inputs from the world, "fuzzyfing" them by defining their membership value towards "fuzzy classes", and using these classes to calculate the output using a set of logic rules. The output is the "defuzzyfied" and turned back again into whatever is needed.<br>
+						<p class="sep-white-16"></p>
+						<img class="large" src="../imgs/fuzzy.png" >
+						<p class="sep-white-16"></p>
+						<p class="text">
+						The AI measures 16 parameters through "sensors", including the position of the lowest and closest alien, the position of the closest bunker, the position of any bonus enemy currently in game. Also it measures how far the character is from the edges of the playable area.
+						<br>
+						<br>
+						In order to avoid enemy projectiles, it measures the position of the closest of them and a "Danger" parameter, defined as the sum of enemy projectiles in a certain radius around the player, weighted by the inverse of their distance.<br>
+						Danger will result high when many projectiles are close to the character. <br>
+					</p>
+					<p class = "formula">
+						Danger = &sum; (1/distance(projectile,player)), where distance(projectile,player)<=range<br>
+					</p>  
+					<p class= "text">
+						Also an "Alien Distribution Index" is calculated, estimating the degree of "compactness" of the alien formation. It is calculated as the number of "rows" of live aliens, times the length of each row (11), divided by the number of live aliens.
+					</p> 
+					<p class="formula">
+						ADI = N_rows*11/N_alive.<br>
+					</p>
+					<p class="text">
+						The data output from the "sensors" is used by a two-layered fuzzy  system to produce the final output.<br>
+						The lower layer is a set of 5 fuzzy machines that correspond to 5 different "behaviours":<br>
+						<br>
+						- Attempt to kill the closest enemy<br>
+						- Attempt to kill the lowest enemy<br>
+						- Attempt to kill the bonus enemy<br>
+						- Take shelter behind a bunker<br>
+						- Avoid incoming projectiles<br>
+						<br>
+						The upper level is in charge of selecting, at each frame, what behaviour is to be followed by the character.
+					</p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/flusso.png" >
+					<p class="sep-white-16"></p>
+					<p class="text">
+						Every fuzzy machine retrieves some of the data produced by the sensors, and fuzzyfies it into fuzzy classes. In most cases a continuous value is fuzzyfied in 6 classes: a combination of "high", "medium" and "low", with "positive" and "negative".<br>
+					</p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/fuzzyclasses.png" >
+					<p class="sep-white-16"></p>
+					<p class="text">
+						Every controller is based on a Fuzzy Associative Memory (FAM): a set of rules that process the input into fuzzy output using continuous logic.<br>
+						<br>The fuzzy output of the "behaviour selector" machine is simply used to dynamically switch on the appropriate behaviour. <br>
+						Behaviours are classified in two groups: "offensive" and "defensive". The selector uses the value of the Danger parameter to decide between the two.<br>
+						(The rules are given here in a simplified form. The actual controller doesn't work with logic variabls like the ones used here, but rather with fuzzy classes. The "real" rules are much more complex and much less readable.)<br>
+						<br>
+						- high danger & bunker nearby = shelter<br>
+						- high danger & !bunker nearby = avoid<br>
+						<br>
+						The agent will therefore always try to take shelter when possible, and will only move to avoid projectiles if no bunkers are nearby. This is because in any case this is interrupting the offensive behaviours, and taking shelter requires less movement, and therefore has less impact on the offensive behaviour it interrupts.<br>
+						<br>
+						- low danger & bonus present & !enemies low & (!enemy formation compact | bonus reachable) = attack bonus ship<br>
+						- low danger & !enemies low & (enemy formation compact | (bonus ship present & !bonus reachable) = attack closest enemy<br>
+						- low danger & enemies low = attack lowest enemy<br>
+						<br>
+
+						The agent will always choose to attack the closest enemy instead of attacking the lowest, unless necessary. This is because shooting close enemies allows to kill more enemies in a short time, while also killing enemies in vertical lines, thus making the enemy formation less compact and making it easier to hit the bonus ship and get higher scores.
+						<br>
+						Each of the five behaviours is an other controller. It analyses data from the sensors and outputs the final commands for the playable character. Movement is represented by four fuzzy classes: "hard left", "left", "right", "hard right" (two velocities). Shooting is a simple boolean: when the cooldown time between bullets expires, if the boolean is set to True a bullet will be fired.<br>
+						<br>
+						The 6 FAMs were iteratively updated and refined, observing the emergent behaviour of the agent and adjusting its rules accordingly.<br>
+						The final iteration was tested and left to play 1000 games unattended. Winrate and game length were logged, showing that the agent won 89% of the times.<br>
+						15 humans played 10 games each, with a total winrate of 56%. <br>
+						A notable difference between human players and AI player is that the latter tends to lose (when it does) later in the game, when only a handful of enemies remain. Humans nistead tend to die early, when many bullets come from different directions and are harder to take into account and avoid.<br>
+						The AI will be more likely to lose when only few enemies remain close to each other. This only happens in the late game when enemies are also low. As a consequence, in this kind of situation, many bullets are fired in a small area, and therefore when the AI tries to get close to destroy the enemies the danger level spikes, forcing it to transition into "avoid" behaviour. If this happens when the enemies are moving towards the agent, it can happen that it gets pushed into a corner and killed.<br>
+						To try and prevent this, the AI will try, when in "avoid mode", to stay away from the edges of the playable area. It's inability to plan ahead (fuzzy controllers are basically simply input-output maps) makes it impossible for it to recognise the problem and avoid getting trapped against the edge.<br>
+					</p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/trap.png" >
+					<p class="sep-white-16"></p>
+					<ul>
+						<li ><a class="menu" style="text-align: left; padding-top:0px" href="spaceinvadersGIF.html">> see a GIF of the AI in action</a></li>
+					</ul>
+					<!-- project entry -->
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>
