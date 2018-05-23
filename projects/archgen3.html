@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<meta property="og:image" content="http://random-genesis.getforge.io/imgs/layout_generation7.png" />
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="mailto:ricc.cantoni@gmail.com">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Islamic architecture</h1>
+					<p class="sep"></p>
+					<p class="text">
+					The idea is to hierarchically construct buildings by instantiating pre-modelled, 3D pieces.<br>
+					A Markov-chain-like grammar can be used to procedurally design a tree of objects, where the leaves are simple solid shapes.<br>
+					Keeping the models as bare-bone as possible will allow the algorithm to scale in complexity, while simultaneously drastically reducing the costs of the modelling process.<br>
+					<br>
+					I have chosen to look at islamic architecture for inspiration. I guess it looks more organic and less "planned" than other kinds of monumental art, so that even a randomised group of buildings will look alright.
+					<br>
+					<br>
+					Not a game, not a complicated algorithm, just a toy.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class ="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="title">
+						"Prototype" (May 2018)
+					</p>
+					<a class="text" href="archgen2.html">>Previous update</a></li>
+					<p class="text">
+					<br>
+					It has been a while, but I managed to put toghether a working prototype. 
+					The complexes it generates are crude but sensible.<br>
+					I followed a bottom-up approach, starting from individual, simple elements such as the parts of a column,
+					and building up hierarchically more complex pieces up to entire buildings.<br>
+					In the end most of the time and effort was spent modeling pieces in Blender and adjusting them to be instantiated dynamically.
+					Not only the system has to define the number, position, and type of individual pieces procedurally, but also their proportions.<br>
+					<br>
+					First, a dedicated component generates the layout of the individual buildings that will be part of the complex (see previous update),
+					the output of this phase defines what kind of building goes where, and the main parameters of its generation.<br>
+					Then each building is constructed hierarchically: a main empty GameObject instantiates other GameObjects following a tree-like pattern,
+					in which the internal nodes are empty GOs with scripts attached, that follow simple markov chains to, in turn, instantiate more elements.<br>
+					The leaves of the tree are of course actual 3D parts, instantiated with the appropriate position, rotation and scale.<br>
+					<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								For instance, the generation of a 
+								decoration at the top of a dome 
+								is launched by the instantiation 
+								of an empty GO, contaning a script 
+								with the simple markov chain shown here.<br>
+								Each node in the chain corresponds, 
+								in this case, to the instantiation 
+								of a 3D element: a rod, an orb, 
+								or a crescent. <br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/crescent_markov.png" >
+						</div>
+					</div>
+					<p class="text">
+					<br>
+						Some of these elements (in this case, the crescent) are picked from a pool of 3D assets. These randomised elements need to remain consistent among different buildings. 
+						To ensure this, a "lazy randomisation" system is used, via a singleton class that picks the asset at random when it is requested for the first time, and keeps it stored.<br>
+						This way, for instance, different buildings will have columns and arches sharing the same style and proportions.<br>
+						<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								Each node of the chain either spawns an
+								empty GO, or a "lazy random" 3D asset.<br>
+								This causes the resulting architectural 
+								element to be dynamic in structure, shape,
+								and proportions.<br>
+								This decoration was generated by a random 
+								walk on the markov chain above on the path
+								[R, O, O, O, C].
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/decor_crescent.png" >
+						</div>
+					</div>
+					<p class="text">
+						<br>
+						The final results are varied enough, while remainig sensible. The following GIF shows 80 finished complexes: they were not selected, modified or filtered in any way.<br>
+						<br>
+					</p>
+					<img class="large" src="../imgs/archgen_prototype.gif" >
+					<p class="text">
+					<br>
+						Although crude and lacking complexity, the prototype can generate some interesting designs.<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								 In some cases the RNG makes it so that only a small number of buildings are generated, 
+								 and if they are also small in size the complex ends up being very compact.<br>
+								 In some cases this feels very cramped,<br> 
+								 like the case shown on the right of the picture.<br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/miniarch.png" >
+						</div>
+					</div>
+					<p class="text">
+					<br>
+					I especially liked some minimalist designs like the one to the left of the picture, or the one currently used as logo of this website.<br>
+					<br>
+					Of course the RNG can also cause the opposite extreme effect, where many, larger buildings are generated.
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+								 Here are shown two different outcomes: a very large, plain-looking succession of flat-roofed buildings and courtyards, 
+								 and what is basically a bunch of domes clumped toghether in a big pile.<br>
+								 This last one has some<br> 
+								 "Aghia Sophia flavour" to it.<br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/megaarch.png" >
+						</div>
+					</div>
+					<p class="text">
+					<br>
+					The system is however definity still a prototype. The code is in dire need of cleaning and refactoring (and this is also why i'm not making it public as some have asked), 
+					especially those parts that have to do with the logic behind the tree of GameObjects need to be streamlined to make the addition of new architectural elements a simpler matter.
+					However, this prototype has the value of showing that the approach currently being followed can prove effective in generating architecture, without the need for a set of 
+					complex, a-priori, rules.<br>
+					<br>
+					</p>
+					<div class="row">
+						<div class="col-md-6">
+							<p class="text">
+							<br>
+								 Most of the architectural elements built by the prototype are currently too plain and uninteresting, such as the domed building shown here.<br>
+								 Streamlining the process of recursive instantiation of parts will make it possible to add much complexity.<br>
+							</p>
+						</div>
+						<div class="col-md-6">
+							<img class="large" src="../imgs/mosque_simple.png" >
+						</div>
+					</div>
+					<p class="sep"></p>
+					<!-- project entry -->
+					<!--<a class="text" href="archgen3.html">>Next update</a></li>-->
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+			</div>
+		</div>
+	</body>
+	</html>
