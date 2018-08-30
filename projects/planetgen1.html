@@ -60,14 +60,14 @@
 					while offering challenges and problems that will be common to all classes.<br>
 					<br>
 					In actual astronomy, "terrestrial planets" are composed primarily of silicates and metals. Of course, not all these planets develop life of any kind, have oceans or even have an atmosphere.<br> 
-					A good starting point though, is a planet with all three: solid ground, some kind of ocean, life (vegetation), and some kind of atmosphere.<br>
+					A good starting point though, is a planet with a complete set of features: solid ground, some kind of ocean, life (vegetation), and some kind of atmosphere.<br>
 					It will be comparatively easier to remove any of these features later.<br>
 					<br>
-					The plan is to generate a texture first, and then make it look like a planet. The texture will have to show different layers: at elast one for the ground, one for the oceans, and one for the clouds.<br>
-					In order to keep everything light and simple, I will just be using layers of Perlin noise (natively offered by Processing) to define where layers are visible and their specific looks.<br>
+					The plan is to generate a texture first, and then make it look like a planet. The texture will have to show different layers: at least one for the ground, one for the oceans, and one for the clouds.<br>
+					In order to keep everything light and simple, I will just be using matrices of Perlin noise (natively offered by Processing) to define where layers are visible and their specific looks.<br>
 					One matrix of noise will define the "altitude" of the ground, distinguishing landmasses from oceans.<br>
 					One layer will define the color of the land, and one will define the color of the sea.<br>
-					An other two will be necessary for the clouds. Initially i wanted to only use one, but the properties of Perlin noise make it so that the values are strongly squashed towards the mean, 
+					An other two will be necessary for the clouds. Initially I wanted to only use one, but the properties of Perlin noise make it so that the values are strongly squashed towards the mean, 
 					making it very difficult to manipulate the amount of clouds that are visible. Instead, two layers will be used: one definig where clouds are, and one defining how they look.<br>
 					<br>
 					This would mean only generating 4 matrices of noise in order to get a "full" planet texture, plus the iterations necessary to render it.<br>
@@ -125,12 +125,12 @@
 					</div>
 					<p class="sep-white-16"></p>
 					<p class="text">
-					This kind of texture is cery simple yet acceptable for the moment. The next step is to make it into a planet.<br>
-					Rather than applying the texture to a real 3D item, the spherical shape of a planet is simulated by applying to it a precomputed shadow.<br>
-					The shadow of a sphere was initially drawn using a processing primitive, with 3D lighting, on a blank image. Than the image is exported and saved as a jpg.
+					This kind of texture is very simple yet acceptable for the moment. The next step is to make it look like planet.<br>
+					Rather than applying the texture to a real 3D item, the spherical shape of a planet is simulated by applying a precomputed shadow.<br>
+					The shadow of a sphere was initially drawn using the sphere() primitive, with 3D lighting, on a blank image. Then the image is exported and saved as a jpg.
 					At launch, the generator loads the picture of the sphere, draws it, and stores its pixels as an array of colors. <br>
-					Once the texture is generated an other interpolation is performed on its pixels using those from the sphere as parameter, where darkness is applied to the colors producing 
-					the illusion of a 3D celestial body.<br></p>
+					Once the planet surface is generated an other interpolation is performed on its pixels using those from the sphere as parameter, where darkness is applied to the colors producing 
+					the illusion of a 3D object.<br></p>
 					<p class="sep-white-16"></p>
 					<img class="large" src="../imgs/planet_sphere.jpg">
 					<p class="sep-white-16"></p>
