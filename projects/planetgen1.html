@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="mailto:ricc.cantoni@gmail.com">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Simple 2D planet generation</h1>
+					<p class="sep"></p>
+					<p class="text">
+					The objective is to design a system capable of generating sprites representing many different types of planets.<br>
+					Since I will not be focusing on the features of a planet's surface, but rather on its general appearance, the generation will remain relatively lightweight.<br>
+					<br>
+					I will be using Processing 3, which offers an array of very straightforward tools for generating and manipulating textures and images.<br> 
+					<br>
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class ="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry -->
+					<p class="title">
+						"Earth-like" (Aug 2018)
+					</p>
+					<p class="text">
+					Since the generation of different classes of planets will be implemented separately, I will start from "Earth-like" planets, which seem to be intuitively simpler, 
+					while offering challenges and problems that will be common to all classes.<br>
+					<br>
+					In actual astronomy, "terrestrial planets" are composed primarily of silicates and metals. Of course, not all these planets develop life of any kind, have oceans or even have an atmosphere.<br> 
+					A good starting point though, is a planet with all three: solid ground, some kind of ocean, life (vegetation), and some kind of atmosphere.<br>
+					It will be comparatively easier to remove any of these features later.<br>
+					<br>
+					The plan is to generate a texture first, and then make it look like a planet. The texture will have to show different layers: at elast one for the ground, one for the oceans, and one for the clouds.<br>
+					In order to keep everything light and simple, I will just be using layers of Perlin noise (natively offered by Processing) to define where layers are visible and their specific looks.<br>
+					One matrix of noise will define the "altitude" of the ground, distinguishing landmasses from oceans.<br>
+					One layer will define the color of the land, and one will define the color of the sea.<br>
+					An other two will be necessary for the clouds. Initially i wanted to only use one, but the properties of Perlin noise make it so that the values are strongly squashed towards the mean, 
+					making it very difficult to manipulate the amount of clouds that are visible. Instead, two layers will be used: one definig where clouds are, and one defining how they look.<br>
+					<br>
+					This would mean only generating 4 matrices of noise in order to get a "full" planet texture, plus the iterations necessary to render it.<br>
+					<br>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								A first layer of Perlin noise defines landmasses: the values generated are in the range [0,1], distributed as a very narrow Gaussian Bell curve. 
+								Values greater than a given sea level (in this case 0.5) are flagged as land (in white), while the rest will be oceans.
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" style= "width:60%; margin-left:15%" src="../imgs/landmass1.jpg" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								Two more layers define the colouring of land and sea: the noise value is used as parameter for a linear interpolation between two "extreme" RGB colors.<br>
+								For now "standard" colors are being used. Some degree of randomisation will be introduced later.<br>
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" style= "width:60%; margin-left:15%" src="../imgs/landmass2.jpg" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								A mask defining where clouds are going to be visible is generated using the same approach: noise values greater than a certain threshold define pixels where clouds will be drawn (in red in the image).<br>
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" style= "width:60%; margin-left:15%" src="../imgs/clouds1.jpg" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<div class="row">
+						<div class = "col-md-6">
+							<p class="text">
+								<br>
+								Clouds are drawn in these areas using yet an other layer of Perlin noise.<br>
+								The noise value is used to interpolate between the underlying colour (land or sea) and whatever colour the clouds are going to be.<br> 
+								In this case, white.
+							</p>
+						</div>
+						<div class = "col-md-6">
+							<img class="large" style= "width:60%; margin-left:15%" src="../imgs/clouds2.jpg" >
+						</div>
+					</div>
+					<p class="sep-white-16"></p>
+					<p class="text">
+					This kind of texture is cery simple yet acceptable for the moment. The next step is to make it into a planet.<br>
+					Rather than applying the texture to a real 3D item, the spherical shape of a planet is simulated by applying to it a precomputed shadow.<br>
+					The shadow of a sphere was initially drawn using a processing primitive, with 3D lighting, on a blank image. Than the image is exported and saved as a jpg.
+					At launch, the generator loads the picture of the sphere, draws it, and stores its pixels as an array of colors. <br>
+					Once the texture is generated an other interpolation is performed on its pixels using those from the sphere as parameter, where darkness is applied to the colors producing 
+					the illusion of a 3D celestial body.<br></p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/planet_sphere.jpg">
+					<p class="sep-white-16"></p>
+					<p class="text">
+					Here are shown some of the planets produced. The variety in the output is not sufficient, but will greatly increase once the parameters for the generator become randomized.<br>
+					</p>
+					<p class="sep-white-16"></p>
+					<img class="large" src="../imgs/planets_15_1.jpeg" >
+					<p class="sep-white-16"></p>
+					<!-- project entry -->
+					<!--<a class="text" href="archgen2.html">>Next update</a></li>-->
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>
