@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Random Genesis</title>
+		<link rel="stylesheet" type="text/css" href="../myStyle.css">
+		<link href="https://fonts.googleapis.com/css?family=Days+One|Roboto" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="bower_components/jquery.gifplayer/dist/gifplayer.css">
+		<script type="text/javascript" src="bower_components/jquery.gifplayer/dist/jquery.gifplayer.js"></script>
+ 		<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	</head>
+	<body style="background-color: #e2e2e2">
+		<div class = "container"> 
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-8">
+					<h1 class="logo">
+						Random_genesis
+					</h1>
+				</div>
+				<div class="col-md-2">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2">
+				</div>
+				<div class="col-md-2" style="padding-right: 8px; padding-left: 0px">
+					<a href="../index.html"> <img class="menu" src="../imgs/map.jpg" alt="some_text" > </a>
+					<p class="sep" style="margin-bottom: 2px"></p>
+					<ul>
+				    <li><a class="menu" href="../index.html">Home</a></li>
+				    <li><a class="menu" href="../projects.html">Projects</a></li>
+				    <li><a class="menu" href="mailto:ricc.cantoni@gmail.com">Contact</a></li>
+				    </ul>
+				</div>
+				<div class="col-md-6">
+					<!-- project header-->			
+					<h1 class="section">- Scientific worldbuilding</h1>
+					<p class="sep"></p>
+					<p class="text">
+					Constructing fictional places has always been one of the main goals in the general field of procedural generation.<br>
+					However, in most cases, even the generation of entire worlds has just been a necessary step in the creation of some other product. The generation tends therefore to focus on a few aspects that are core to the final product, while many variables are left aside.<br>
+					<br>
+					The idea is to try and create large territories, where many different variables are scientifcally taken into account: geology, geography, climate, ecology... <br>
+					Possibly, through the application of some "Guns, Germs and Steel-like" mechanics it will be possible to simulate large scale interactions between humans and the environment, and among humans on a large scale.
+					<br>
+					</p>
+					<!-- project header -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2"></div>
+				<div class="col-md-8">
+					<p class="sep"></p>
+					<!-- project entry --> 
+					<p class="title">
+						Wind Generation (Oct 2018)
+					</p>
+					<a class="text" href="worldgen5.html">>Previous Update</a></li>
+					<p class="text"><br>
+					Up until this point, we have a way of generating sensible heighmaps, and a way of distributing sensible temperature values, month by month.
+					The next step in the construction of a simple climate simulation model is to introduce wind. <br>
+					Since the aim of this is to generate large scale environments, the focus will be on average, long distance, currents rather than on local phenomena.<br>
+					The factor which define direction and speed of air currents are several. Since the goal of this work is to produce credible results rather than fully
+					replicating real world mechanics, the main factor that will be taken into account is heat.<br>
+					<br>
+					The uneven distribution of heat on the Earth's surface is the main driving factor between what is called "Atmospheric circulation", meaning vast flows of air that
+					balance the distribution of thermal energy. These flows, called "cells", remain basically unchanged for millions of years, because they depend on relatively constant parameters, such as 
+					the thermal properties of air, the flow of energy from the Sun, the Earth's diamater, and so on. <br>
+					<br>
+					</p>
+						<img class="large" src="../imgs/hadley.png" >
+					<p class="text">
+					<br>
+					This constant flow of air in a fixed direction, together with the Coriolis effect caused by the rotation of the Earth, causes what are usually called "Prevailing winds", or "Trade winds":
+					persistent air currents that blow, generally, in the same direction all the time. These winds have been the determining factor behind the emergence of trade routes in the age of sail, and 
+					are a major force in the climate of many coastal regions.<br>
+					<br>
+					Simulating these winds is quite simple, since there is no need to implement the complex mechanix behind them. Flow direction and flow speed are merely function of the latitude.<br>
+					<br>
+					Direction was sourced by various description of prevailing winds found on the internet, as well as from images such as the one shown above (from Wikipedia).<br>
+					Defining wind speed was a bit more complicated. However once again there are numerous resources online one can start from, presenting numeric data as well as images such as this (researchgate.net):<br>
+					<br>
+					</p>
+						<img class="large" src="../imgs/avgwindspeed.png" >
+					<p class="text">
+					<br>
+					These are the results of the two functions I came up with to sort-of reproduce real world values. On the left a map showing the direction of trade winds, and on the right a map of wind speed.<br>
+					<br>
+					<div class="row">
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/tradewindDir.png" >
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/tradewindSpeed.png" >
+						</div>
+					</div>
+					<p class = "text">
+					<br>
+					Clearly, this would only be acceptable if the Earth was a perfectly smooth ball of ocean, but it isn't. An other factor that is going to be considered is the differential of temperature
+					caused by landmasses and elevation. This causes a difference in pressure, since warmer air tends to rise and displace colder one. In turn this causes a flow at ground height from cold to warmer areas, when the surrounding air 
+					moves towards the lower pressure. There is a symmetric flow of fluid in the opposite direction above, but since only ground level wind is being simulated, this can be ignored.<br>
+					<br>
+					This was simulated via a recursive algorithm: given a square of size S, the average temperature along its four edges is calculated. The wind then flows from the coldest edge to the warmest,
+					with a speed proportional to the difference in average temperature between the two.<br>
+					Starting from S=32, each square is divided into four, and the calculation is performed on them. The final result is a weighted blending of all the squares of all sizes.<br>
+					Given that smaller squares will usually produce weaker winds, due to the fact that the differential in temperature is smaller, the weighting is done in a way that reinforces smaller squares.<br>
+					<br>
+					This required some delicate tweaking of the many parameters involved, in the end these are the outputs.<br> 
+					Again, direction on the left and speed on the right<br>
+					<br>
+					<div class="row">
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/recursiveWindDir.png" >
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/recursiveWindSpeed.png" >
+						</div>
+					</div>
+					<p class = "text">
+					<br>
+					At this point we have two different wind maps: one with "trade winds", and one with winds generated by temperature differential. The two need to be blended together to produce a final global wind map.<br>
+					<br>
+					A fact must be taken into consideration: trade winds are already a function of differential temperatures (and coriolis effect). If, at any point, one was to sum the two maps, the temperature would contrbute twice to the final output.<br>
+					Therefore the blending is done via a convex combination of the two map values. The blending parameter itself is defined as a parable, function of altitude.<br>
+					<br>
+					At sea, the "trade wind" map contributes almost alone to the final value. its weight decreases quickly with altitude, until it goes to zero after a certain point.<br>
+					<br>
+					After blending the two maps, the final map is smoothed repeatedly, setting each point (a 2D vector) to the average of its neighbours.<br>
+					<br>
+					Here are the results:<br>
+					<br>
+					<div class="row">
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/windDir.png" >
+						</div>
+						<div class = "col-md-6">
+							<img class="large" src="../imgs/windSpeed.png" >
+						</div>
+					</div>
+					<p class = "text">
+					<br>
+					A limit to this approach is the statistical prevalence of winds along the Nort-South axis. This depends on the reliance on a square to calculate the direction of temperature differentials:<br>
+					since adjacent edges in a square have part of their points closer to one another, their average temperatures are likely to be similar. Edges that are opposite in the square are much more likely
+					to dominate in temperature differential, especially the (North, South) pair, because of the change in temperature given by latitude.<br>
+					<br>
+					Changing the algorithm from a square-based approach to a radial one would be very complex. I might return to it at a later date, but for now the output seems natural enoughto be acceptable.<br>
+					<br>
+					With wind in place, the next logical step is going to be a precipitation model.
+					<!-- project entry -->
+					<!--<a class="text" href="worldgen2.html">>Next update</a></li>-->
+					<p class="sep-white"></p>
+					<p class="sep-white"></p>
+				</div>
+				<div class="col-md-2">
+				</div>
+			
+			</div>
+		</div>
+	</body>
+	</html>
